@@ -1,0 +1,68 @@
+$border: 2px solid black;
+
+.catalog-item {
+     background: white;
+     color: black;
+     padding: 0;
+
+     border-left: 2px solid black;
+     border-right: 2px solid black;
+     border-top: $border;
+
+     font: 25pt Arial;
+     text-decoration: none;
+
+     display: flex;
+     flex-direction: row;
+     align-items: stretch;
+     overflow: hidden;
+
+     cursor: pointer;
+}
+
+.catalog-item:first-child {
+     border-radius: 20px 20px 0 0;
+}
+
+.catalog-item:last-child {
+     border-radius: 0 0 20px 20px;
+     border-bottom: 2px solid black;
+}
+
+.catalog-item:hover {
+     background: black;
+     color: white;
+}
+
+.catalog-item * {
+     text-decoration: none;
+     margin: 5px 10px;
+}
+
+.catalog-item-index {
+     width: 55px;
+     text-align: center;
+}
+
+.catalog-item-info {
+     flex: 1;
+     text-align: center;
+}
+
+.catalog-item-name {
+     flex: 2;
+}
+
+.catalog-item-name * {
+     margin: 0;
+}
+
+.catalog-item-info-splitter {
+     margin: 0 0;
+     width: 2px;
+     background: black;
+}
+
+.catalog-item:hover .catalog-item-info-splitter {
+     background: white;
+}
