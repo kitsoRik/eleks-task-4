@@ -38,7 +38,9 @@ function Album(props) {
                         sortType={sortType}
                         setSortType={setSortType}/>
                     <Songs 
-                        songs={songs}/>
+                        songs={songs}
+                        sortBy={sortBy}
+                        sortType={sortType}/>
                 </div>
             </div>
      );
