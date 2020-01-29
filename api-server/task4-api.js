@@ -10,7 +10,6 @@ const db = new sqlite.Database("./nice.db");
 app.use(cookieParser());
 
 app.use("*", (req, res, next) => {
-     console.log(req.header("set-cookie"));
      res.setHeader("Access-Control-Allow-Origin", "*");
 
      next();
@@ -19,26 +18,14 @@ app.use(express.static("public"));
 
 app.get("/singers", (req, res) => {
      _getSortedSingers(req.query, (singers) => {
-          res.send(singers);
+          _getCountSingers(req.query, (singersCount) => {
+               res.send({
+                    singers,
+                    singersCount
+               });
+          });
      })
 });
-
-app.get("/singers/pagesCount", (req, res) => {
-     let { limit } = req.query;
-
-     if(!limit) {
-          res.send(1);
-          return;
-     }
-
-     db.get("SELECT COUNT(id) FROM singers", (err, row) => {
-          let count = row['COUNT(id)'] / limit;
-
-          if(count !== parseInt(count)) count = parseInt(count) + 1;
-
-          res.send({ pagesCount: count });
-     });
-})
 
 app.get("/singers/:id", (req, res) => {
      
@@ -102,23 +89,24 @@ function _getSortedSingers(query, callback) {
           singers = singersRows;
 
           callback(singers);
-
-          // let _index = 0;
-          // singersRows.forEach((singer, singersIndex) => {
-          //      db.get("SELECT COUNT(id) AS count FROM singers_albums WHERE singer_id=?", [singer.id], 
-          //      (err, { count }) => {
-          //           if(err) return console.log(err);
-
-          //           singer.albumCount = count;
-          //           singers.push(singer);
-
-          //           if(++_index === singersRows.length)
-          //      });
-          // });
      });
 } 
 
-app.listen(11003, (err) => {
+function _getCountSingers(query, callback) {
+     let { search } = query;
+     let querySingers = `SELECT COUNT(id)
+                         FROM singers 
+                         WHERE name LIKE ?`;
+     let queryParams = [
+         `%${search ? search : ""}%`
+     ];
+     db.get(querySingers, queryParams, (err, count) => {
+          if(err) return console.log(err, querySingers);
+          callback(count['COUNT(id)']);
+     });
+}
+
+app.listen(11004, (err) => {
      if(err) return console.log(err);
-     console.log("Listening 11003 port...");
+     console.log("Listening 11004 port...");
 });
