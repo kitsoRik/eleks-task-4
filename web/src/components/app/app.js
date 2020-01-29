@@ -7,6 +7,7 @@ import ApiHelper from '../../services/apiHelper';
 
 const App = (props) => {
 
+     const [searchText, setSearchText] = useState(""); 
      const [singers, setSingers] = useState([]);
      const [loaded, setLoaded] = useState(false);
      const [pagesCount, setPagesCount] = useState(-1);
@@ -22,45 +23,35 @@ const App = (props) => {
           setLoaded(false);
           ApiHelper.getAllSingers(query)
                     .then((body) => {
-                         setSingers(body);
+                         setSingers(body.singers);
                          setLoaded(true);
+                         setPagesCount(Math.ceil(body.singersCount / query.limit))
                     });
      }
 
-     useEffect(() => {
-          ApiHelper.getPagesCount(query.limit)
-               .then(({ pages }) => {
-                    setPagesCount(pages)
-                    updateQuery();
-               });
-     }, [pagesCount]);
-
      useEffect(() => updateQuery(), [query]);
-     
-     const catalog = () => 
-          <Catalog
-               singers={singers}
-               setSingers={setSingers}
-               loaded={loaded}
-               setLoaded={setLoaded}
-               pagesCount={pagesCount}
-               setPagesCount={setPagesCount}
-               query={query}
-               setQuery={setQuery}
-
-               updateQuery={updateQuery}
-               />;
-     const element = (props) =>
-          <SingerPage
-               {...props} />;
 
      return (
           <div>
                <Router>
                     <Switch>
                          <Route path="/" render={() => <Link to="/catalog/">Catalog</Link>} exact />
-                         <Route path="/catalog/" component={catalog} exact />
-                         <Route path="/catalog/:id" component={element} exact />
+                         <Route path="/catalog/" render={() => 
+                              <Catalog
+                                   searchText={searchText}
+                                   setSearchText={setSearchText}
+                                   singers={singers}
+                                   setSingers={setSingers}
+                                   loaded={loaded}
+                                   setLoaded={setLoaded}
+                                   pagesCount={pagesCount}
+                                   setPagesCount={setPagesCount}
+                                   query={query}
+                                   setQuery={setQuery}
+
+                                   updateQuery={updateQuery}
+                              />} exact />
+                         <Route path="/catalog/:id" render={(props) => <SingerPage { ...props }/>} exact />
 
                          <Redirect to="/" />
                     </Switch>

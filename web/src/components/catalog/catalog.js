@@ -4,22 +4,23 @@ import { withRouter } from 'react-router-dom'
 import CatalogContainerHeaders from "./catalog-container-headers";
 import CatalogContainerPageControler from './catalog-container-page-controler';
 
-
 import "./catalog.scss"
 
-import ApiHelper from '../../services/apiHelper';
 import CatalogSearch from './catalog-search';
 import CatalogContainer from './catalog-container';
+import { debounce } from 'debounce';
 
 function Catalog(props) {
      const { singers, setSingers, 
+          searchText, setSearchText,
           loaded, setLoaded, 
           pagesCount, setPagesCount, 
           query, setQuery } = props;
 
      const { updateQuery } = props;
      
-     const onStartFind = text => setQuery({ ...query, search: text });
+     const onStartFind = debounce((text) => setQuery({ ...query, search: text }), 400);
+     
 
      const onStartSort = (field) => {
           let q = { ...query };
@@ -43,29 +44,32 @@ function Catalog(props) {
           setQuery(q);
      }
 
+
      return (
           <div className="catalog">
                <CatalogSearch 
-                    onStartFind={onStartFind}
-               />
-               <div className="catalog-table">
-                    <CatalogContainerHeaders 
-                         onSort={onStartSort}
-                         sortField={query.sort}
-                         sortType={query.sortType}
+                    onStartFind={onStartFind} />
+                    {
+                         singers.length != 0 &&
+                         <div className="catalog-table">
+                              <CatalogContainerHeaders 
+                                   onSort={onStartSort}
+                                   sortField={query.sort}
+                                   sortType={query.sortType}
+                              />
+                              <CatalogContainer 
+                                   singers={singers}
+                                   pageNumber={query.page}
+                                   pageLimit={query.limit}
+                                   searchText={query.search}
+                              />
+                         </div>
+                    }
+                    <CatalogContainerPageControler 
+                         pageNumber={ query.page }
+                         pagesCount={ pagesCount }
+                         onPageChanged={ onPageChanged }
                     />
-                    <CatalogContainer 
-                         singers={singers}
-                         pageNumber={query.page}
-                         pageLimit={query.limit}
-                         searchText={query.search}
-                    />
-               </div>
-               <CatalogContainerPageControler 
-                    pageNumber={ query.page }
-                    pagesCount={ pagesCount }
-                    onPageChanged={ onPageChanged }
-               />
           </div>
      )
 }

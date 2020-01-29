@@ -2,7 +2,7 @@ import React from 'react';
 
 const Song = (props) => {
 
-    const { name, description, duration } = props;
+    const { id, name, description, duration } = props;
 
     return (
         <div className="album-song">

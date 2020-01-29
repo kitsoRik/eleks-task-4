@@ -15,7 +15,7 @@ const CatalogContainerPageControler = (props) => {
             <span>{pageNumber}</span>
             <button
                 onClick={() => onPageChanged("next")}
-                style={{ display: pageNumber === pagesCount ? "none" : "inline" }}
+                style={{ display: pageNumber === pagesCount || pagesCount === 0 ? "none" : "inline" }}
             >{">"}</button>
         </div>
     )

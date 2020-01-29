@@ -7,7 +7,7 @@ import SavedSingers from '../../services/savedSingers'
 import Albums from './albums';
 
 const SingerPage = (props) => {
-
+     console.log(props);
      const [singer, setSinger] = useState(null);
 
      useEffect(() => {

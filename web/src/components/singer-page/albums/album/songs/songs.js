@@ -4,9 +4,9 @@ import Song from './song/song';
 const Songs = (props) => {
 
     const { songs } = props;
-    console.log(songs);
-
-    const songElements = songs.map((song) => <Song { ...song } />)
+    
+    const songElements = songs.map((song) => <Song key={song.singer_id + "-" + song.album_id + "-" + song.id} { ...song } />)
+    
     return ( 
         <div>
             { songElements }
