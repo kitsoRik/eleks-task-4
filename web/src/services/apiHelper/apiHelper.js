@@ -1,6 +1,6 @@
 import Axios from "axios";
 
-export const host = "http://localhost:11004";
+export const host = "http://5.45.118.116:11004";
 
 export async function getAllSingers(params) {
      return Axios.get(`${host}/singers`, {params})

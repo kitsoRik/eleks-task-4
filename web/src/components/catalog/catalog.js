@@ -19,8 +19,10 @@ function Catalog(props) {
 
      const { updateQuery } = props;
      
-     const onStartFind = debounce((text) => setQuery({ ...query, search: text }), 400);
-     
+     const onStartFind = (text) => {
+          setSearchText(text);
+          return debounce((text) => setQuery({ ...query, search: text }), 400)(text);
+     }
 
      const onStartSort = (field) => {
           let q = { ...query };
@@ -48,6 +50,7 @@ function Catalog(props) {
      return (
           <div className="catalog">
                <CatalogSearch 
+                    searchText={searchText}
                     onStartFind={onStartFind} />
                     {
                          singers.length != 0 &&
